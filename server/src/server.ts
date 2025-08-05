@@ -6,7 +6,6 @@ import messageRouter from "./routes/message.route"
 import userRouter from "./routes/user.route"
 import cookirParser from "cookie-parser";
 
-
 const app = express();
 dotenv.config({ quiet: true });
 app.use(express.json());

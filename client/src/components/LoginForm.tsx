@@ -1,7 +1,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import axios from "axios";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Toaster } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { z } from "zod";
 
@@ -28,10 +29,13 @@ const LoginForm = () => {
     const onSubmit = async (values: z.infer<typeof loginFormSchema>) => {
         setLoading(true);
         try {
-            console.log(values);
-            navigate("/dashboard");
-        } catch (error) {
-            console.log(error);
+            const response = await axios.post("/api/auth/login", { ...values });
+            // console.log(response);
+            toast.success(response.data.message);
+            navigate("/login");
+        } catch (error: any) {
+            console.log(error)
+            toast.error(error.response.data.error.message);
         } finally {
             setLoading(false);
         }

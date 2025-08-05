@@ -37,7 +37,7 @@ export const registerUser = async (req: Request, res: Response) => {
             throw new ApiError(404, "Error Occured while registering user.")
         }
 
-        res.status(201).json(new ApiResponse(200, "User Registered Sucessfully."))
+        res.status(201).json(new ApiResponse(200, {}, "User Registered Sucessfully."))
 
     } catch (error: any) {
         console.error(error);
@@ -73,6 +73,7 @@ export const loginUser = async (req: Request, res: Response) => {
             .json(
                 new ApiResponse(
                     200,
+                    {},
                     "User LoggedIn Sucessfull."
                 )
             );
