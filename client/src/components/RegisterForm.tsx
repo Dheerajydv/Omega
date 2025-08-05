@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import toast, { Toaster } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { z } from "zod";
+import { useAuth } from "../context/authContext";
 
 const registerFormSchema = z.object({
     username: z.string(),
@@ -16,6 +17,7 @@ const registerFormSchema = z.object({
 const RegisterForm = () => {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+    const { setAuthUser } = useAuth();
 
     const { register, handleSubmit, formState: { errors } } = useForm<z.infer<typeof registerFormSchema>>({
         resolver: zodResolver(registerFormSchema),
@@ -32,6 +34,8 @@ const RegisterForm = () => {
             const response = await axios.post("/api/auth/register", { ...values });
             // console.log(response);
             toast.success(response.data.message);
+            localStorage.setItem("chatapp", JSON.stringify(response.data));
+            setAuthUser(response.data)
             navigate("/login");
         } catch (error: any) {
             console.log(error)

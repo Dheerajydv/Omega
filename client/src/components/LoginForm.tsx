@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import toast, { Toaster } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { z } from "zod";
+import { useAuth } from "../context/authContext";
 
 const loginFormSchema = z.object({
     mobileNumber: z.string().min(10, "Invlaid Mobile Number"),
@@ -16,6 +17,7 @@ const LoginForm = () => {
 
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+    const { setAuthUser } = useAuth();
 
     const { register, handleSubmit, formState: { errors } } = useForm<z.infer<typeof loginFormSchema>>({
         resolver: zodResolver(loginFormSchema),
@@ -32,6 +34,8 @@ const LoginForm = () => {
             const response = await axios.post("/api/auth/login", { ...values });
             // console.log(response);
             toast.success(response.data.message);
+            localStorage.setItem("chatapp", JSON.stringify(response.data));
+            setAuthUser(response.data)
             navigate("/login");
         } catch (error: any) {
             console.log(error)

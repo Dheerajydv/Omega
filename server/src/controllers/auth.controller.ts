@@ -30,10 +30,10 @@ export const registerUser = async (req: Request, res: Response) => {
             throw new ApiError(400, "User Already Exists. Please Login");
         }
 
-        await User.create({
+        const registeredUser = await User.create({
             username, email, mobileNumber, password
         })
-        if (!registerUser) {
+        if (!registeredUser) {
             throw new ApiError(404, "Error Occured while registering user.")
         }
 
@@ -64,6 +64,11 @@ export const loginUser = async (req: Request, res: Response) => {
 
         const accessToken = await generateAccessToken(user._id);
 
+        const loggedInUser = await User.findOne({ email, mobileNumber }).select("-password");
+        if (!loggedInUser) {
+            throw new ApiError(404, "User Not Found");
+        }
+
         const options = {
             httpOnly: false,
             secure: false,
@@ -73,7 +78,7 @@ export const loginUser = async (req: Request, res: Response) => {
             .json(
                 new ApiResponse(
                     200,
-                    {},
+                    loggedInUser,
                     "User LoggedIn Sucessfull."
                 )
             );
