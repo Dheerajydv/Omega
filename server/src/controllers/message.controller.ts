@@ -4,6 +4,7 @@ import Chat from "../models/chatModel";
 import Message from "../models/messageModel";
 import { ApiResponse } from "../utils/ApiResponse";
 import { ApiError } from "../utils/ApiError";
+import { getReceiverSocketId, io } from "../socketio/socket";
 
 export const sendMessage = async (req: AuthRequest, res: Response) => {
     try {
@@ -33,7 +34,13 @@ export const sendMessage = async (req: AuthRequest, res: Response) => {
 
         await Promise.all([chats.save(), newMessage.save()]);
 
-        res.status(200).json(new ApiResponse(200, "Message Sent."))
+        //SOCKET.IO function 
+        const reciverSocketId = getReceiverSocketId(recieverId);
+        if (reciverSocketId) {
+            io.to(reciverSocketId).emit("newMessage", newMessage)
+        }
+
+        res.status(200).json(new ApiResponse(200, newMessage, "Message Sent."))
 
     } catch (error: any) {
         console.error(error);

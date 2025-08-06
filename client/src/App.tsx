@@ -2,7 +2,7 @@ import { Route, Routes } from "react-router-dom"
 import LoginForm from "./components/LoginForm"
 import RegisterForm from "./components/RegisterForm"
 import Home from "./components/Home"
-import { VerifyUser } from "./utils/verifyUser"
+import { VerifyUser } from "./utils/VerifyUser"
 
 
 const App = () => {

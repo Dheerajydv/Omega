@@ -5,8 +5,8 @@ import authRouter from "./routes/auth.route";
 import messageRouter from "./routes/message.route"
 import userRouter from "./routes/user.route"
 import cookirParser from "cookie-parser";
+import { app, server } from "./socketio/socket";
 
-const app = express();
 dotenv.config({ quiet: true });
 app.use(express.json());
 app.use(cookirParser());
@@ -19,7 +19,8 @@ const port = process.env.PORT!;
 if (!port) {
     throw new Error("Port is not defined in .env")
 }
-app.listen(port, () => {
+
+server.listen(port, () => {
     dbConnect();
     console.log(`Server Running on Port: ${port}`);
 })

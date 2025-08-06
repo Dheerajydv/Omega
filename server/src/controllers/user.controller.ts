@@ -1,5 +1,5 @@
 import User from "../models/userModel";
-import { AuthRequest } from "../types/types";
+import { AuthRequest, IUser } from "../types/types";
 import { Response } from "express";
 import { ApiError } from "../utils/ApiError";
 import { ApiResponse } from "../utils/ApiResponse";
@@ -34,32 +34,60 @@ export const searchUser = async (req: AuthRequest, res: Response) => {
     }
 }
 
-// export const getCurrentChatter = async (req: AuthRequest, res: Response) => {
-//     try {
-//         const currentUserID = req.user?._id;
-//         const currentChatters = await Chat.find({
-//             participants: currentUserID
-//         }).sort({
-//             updatedAt: -1
-//         });
+export const getCurrentChatters = async (req: AuthRequest, res: Response) => {
+    try {
+        // 1. Validate that a user is authenticated
+        const currentUserID = req.user?._id;
+        if (!currentUserID) {
+            return res.status(401).json(new ApiResponse(401, null, "User not authenticated"));
+        }
 
-//         if (!currentChatters || currentChatters.length === 0) return res.status(200).json(new ApiResponse(200, [], "No chatter currently"));
+        // 2. Find all conversations for the current user, sorted by the most recent update
+        const conversations = await Chat.find({
+            participants: currentUserID
+        }).sort({
+            updatedAt: -1
+        });
 
-//         const partcipantsIDS = currentChatters.reduce((ids, conversation) => {
-//             const otherParticipents = conversation.participants.filter(id => id !== currentUserID);
-//             return [...ids, ...otherParticipents]
-//         }, [])
+        // 3. Handle the case where the user has no conversations
+        if (!conversations || conversations.length === 0) {
+            return res.status(200).json(new ApiResponse(200, [], "No chatter currently"));
+        }
 
-//         const otherParticipentsIDS = partcipantsIds.filter(id => id.toString() !== currentUserID.toString());
+        // 4. Extract a unique, ordered list of other participant IDs
+        // The `reduce` method ensures we get a unique list of IDs while preserving
+        // the order from the most recently updated chats.
+        const otherParticipantIDs = conversations.reduce((uniqueIds, conversation) => {
+            conversation.participants.forEach(participantId => {
+                const participantIdString = participantId.toString();
+                // Check if it's not the current user and not already in our result array
+                if (participantIdString !== currentUserID.toString() && !uniqueIds.includes(participantIdString)) {
+                    uniqueIds.push(participantIdString);
+                }
+            });
+            return uniqueIds;
+        }, [] as string[]);
 
-//         const user = await User.find({ _id: { $in: otherParticipentsIDS } }).select("-password -email");
+        if (otherParticipantIDs.length === 0) {
+            return res.status(200).json(new ApiResponse(200, [], "No other participants found in chats."));
+        }
 
-//         const users = otherParticipentsIDS.map(id => user.find(user => user._id.toString() === id.toString()));
+        // 5. Fetch all participant user profiles in a single, efficient database query
+        const participantUsers = await User.find({
+            _id: { $in: otherParticipantIDs }
+        }).select("-password -email"); // Exclude sensitive fields
 
-//         res.status(200).json(new ApiResponse(200, users, "Current Chatter Fetched."))
+        // 6. Sort the fetched user profiles to match the order of recent conversations
+        // A database `$in` query doesn't guarantee order, so we re-sort it here efficiently.
+        const userMap = new Map((participantUsers as IUser[]).map(user => [user.id.toString(), user]));
+        const sortedUsers = otherParticipantIDs.map(id => userMap.get(id));
 
-//     } catch (error: any) {
-//         console.error(error);
-//         res.status(error?.statusCode || 500).json({ "error": error });
-//     }
-// }
+        // 7. Send the final, sorted list of users
+        return res.status(200).json(new ApiResponse(200, sortedUsers, "Current chatters fetched successfully."));
+
+    } catch (error: any) {
+        console.error("Error in getCurrentChatters:", error);
+        // Avoid sending raw error details to the client for security
+        return res.status(500).json(new ApiResponse(500, null, "Internal Server Error"));
+    }
+};
