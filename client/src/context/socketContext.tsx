@@ -40,7 +40,7 @@ export const SocketContextProvider = ({
     useEffect(() => {
         if (authUser) {
             // The 'io' function returns a Socket instance
-            const newSocket: Socket = io("http://localhost:8000", {
+            const newSocket: Socket = io("https://omega-p95o.onrender.com", {
                 // Use http for local development unless you have SSL configured
                 query: {
                     userId: authUser.data._id,
