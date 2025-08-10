@@ -35,7 +35,7 @@ const SendMessage = () => {
         e.preventDefault();
         setSending(true);
         const imageForm = new FormData();
-        imageForm.append("image", image);
+        imageForm.append("image", image as File);
         try {
             const response = await axios.post(
                 `/api/messages/send-image/${selectedChat?._id}`,

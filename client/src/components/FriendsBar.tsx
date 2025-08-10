@@ -29,6 +29,7 @@ const FriendsBar = ({ onSelectUser }: any) => {
 
     const chatUserHandler = async () => {
         setLoading(true);
+        console.log(newMessageUsers);
         try {
             const response = await axios.get(`/api/users/current-chatter`);
             setChatUser(response.data.data);

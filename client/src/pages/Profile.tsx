@@ -31,7 +31,7 @@ const Profile = () => {
         e.preventDefault();
         setUploading(true);
         const imageForm = new FormData();
-        imageForm.append("profilePic", profilePic);
+        imageForm.append("profilePic", profilePic as File);
         try {
             const response = await axios.post(
                 `/api/auth//upload-profile/${authUser.data._id}`,
