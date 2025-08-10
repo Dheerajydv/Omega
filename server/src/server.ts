@@ -26,6 +26,7 @@ const corsOptions: CorsOptions = {
         "https://localhost:5173",
     ],
     optionsSuccessStatus: 200,
+    credentials: true,
 };
 
 // Enable CORS with the specified options
