@@ -21,7 +21,10 @@ app.use(
 // Define specific options for CORS (recommended for production)
 const corsOptions: CorsOptions = {
     // Replace with your frontend's actual domain
-    origin: "https://omega-frontend-wy0f.onrender.com",
+    origin: [
+        "https://omega-frontend-wy0f.onrender.com",
+        "https://localhost:5173",
+    ],
     optionsSuccessStatus: 200,
 };
 
