@@ -6,6 +6,7 @@ import messageRouter from "./routes/message.route";
 import userRouter from "./routes/user.route";
 import cookirParser from "cookie-parser";
 import { app, server } from "./socketio/socket";
+import cors, { CorsOptions } from "cors";
 
 dotenv.config({ quiet: true });
 app.use(cookirParser());
@@ -17,6 +18,15 @@ app.use(
         extended: true,
     })
 );
+// Define specific options for CORS (recommended for production)
+const corsOptions: CorsOptions = {
+    // Replace with your frontend's actual domain
+    origin: "https://omega-frontend-wy0f.onrender.com",
+    optionsSuccessStatus: 200,
+};
+
+// Enable CORS with the specified options
+app.use(cors(corsOptions));
 
 app.use("/api/auth", authRouter);
 app.use("/api/messages", messageRouter);
