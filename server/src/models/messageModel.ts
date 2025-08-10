@@ -16,7 +16,11 @@ const messageSchema: Schema<IMessage> = new Schema(
         },
         message: {
             type: String,
-            required: true
+            required: false
+        },
+        image: {
+            type: String,
+            required: false
         },
         chatId: {
             type: mongoose.Schema.Types.ObjectId,

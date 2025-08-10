@@ -30,6 +30,10 @@ const userSchema: Schema<IUser, Model<IUser, {}, IUserMethods>> = new Schema(
         friends: {
             type: mongoose.Types.ObjectId,
             ref: "User"
+        },
+        profilePic: {
+            type: String,
+            required: false,
         }
     },
     { timestamps: true }

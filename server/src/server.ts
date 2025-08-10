@@ -8,8 +8,13 @@ import cookirParser from "cookie-parser";
 import { app, server } from "./socketio/socket";
 
 dotenv.config({ quiet: true });
-app.use(express.json());
 app.use(cookirParser());
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({
+    parameterLimit: 100000, // or a number that suits your needs
+    limit: '50mb',          // Also, adjust the size limit if you need to
+    extended: true
+}));
 
 app.use("/api/auth", authRouter)
 app.use("/api/messages", messageRouter)

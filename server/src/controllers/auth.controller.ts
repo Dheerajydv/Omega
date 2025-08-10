@@ -2,6 +2,7 @@ import { Request, Response } from "express"
 import { ApiError } from "../utils/ApiError";
 import User from "../models/userModel";
 import { ApiResponse } from "../utils/ApiResponse";
+import { uploadOnCloudinary } from "../utils/cloudinary";
 
 
 const generateAccessToken = async (userId: any): Promise<any> => {
@@ -95,7 +96,59 @@ export const logoutUser = async (req: Request, res: Response) => {
             maxAge: 0
         })
 
-        res.status(200).json(new ApiResponse(200, "Logout Sucessfull."))
+        res.status(200).json(new ApiResponse(200, {}, "Logout Sucessfull."))
+
+    } catch (error: any) {
+        console.error(error);
+        res.status(error?.statusCode || 500).json({ "error": error });
+    }
+}
+
+export const deleteUser = async (req: Request, res: Response) => {
+    try {
+        const { id: currentUserId } = req.params;
+        if (!currentUserId) {
+            throw new ApiError(404, "User ID not found.");
+        }
+
+        const deletedUserInfo = await User.findByIdAndDelete(currentUserId);
+        if (!deletedUserInfo) {
+            throw new ApiError(404, "User Not Found");
+        }
+
+        res.status(200).json(new ApiResponse(200, deletedUserInfo, "Account Deleted sucessfully."))
+
+    } catch (error: any) {
+        console.error(error);
+        res.status(error?.statusCode || 500).json({ "error": error });
+    }
+}
+
+export const uploadProfile = async (req: Request, res: Response) => {
+    try {
+        const { id: currentUserId } = req.params;
+        if (!currentUserId) {
+            throw new ApiError(404, "User ID not found.");
+        }
+
+        const profilePic = req.file?.path;
+        if (!profilePic) {
+            throw new ApiError(400, "Image is required.")
+        }
+
+        const uploadedProfilePicture = await uploadOnCloudinary(profilePic);
+        if (!uploadedProfilePicture) {
+            throw new ApiError(500, "Error Occured while uploading profile picture.")
+        }
+
+        const user = await User.findByIdAndUpdate(currentUserId, {
+            profilePic: uploadedProfilePicture
+        }).select("-password");
+        if (!user) {
+            throw new ApiError(500, "Error Occured while updating profile picture.")
+        }
+
+        res.status(200).json(new ApiResponse(200, user, "Profile Picture Uploaded sucessfully."));
 
     } catch (error: any) {
         console.error(error);

@@ -1,10 +1,10 @@
 import axios from "axios";
 import { useEffect, useState } from "react"
 import toast from "react-hot-toast";
-import { useAuth } from "../context/authContext";
 import { useNavigate } from "react-router-dom";
 import userChats from "../zustands/useChats";
 import { useSocketContext } from "../context/socketContext";
+import { useAuth } from "../context/authContext";
 
 const FriendsBar = ({ onSelectUser }: any) => {
     const [searchInput, setSearchInput] = useState("");
@@ -13,12 +13,13 @@ const FriendsBar = ({ onSelectUser }: any) => {
     const [debouncedQuery, setDebouncedQuery] = useState("");
     const [chatUser, setChatUser] = useState<any>([]);
     const [selectedUserId, setSetSelectedUserId] = useState(null);
-    const { selectedChat, setSelectedChat, messages, setMessages } = userChats();
+    const { setSelectedChat, messages, } = userChats();
     const { onlineUsers, socket } = useSocketContext();
     const [newMessageUsers, setNewMessageUsers] = useState('');
-
-    const { authUser } = useAuth();
     const navigate = useNavigate();
+    const { authUser } = useAuth();
+    const nowOnline = chatUser.map((user: any) => (user._id));
+    const isOnline = nowOnline.map((userId: any) => onlineUsers.includes(userId));
 
     useEffect(() => {
         socket?.on("newMessage", (newMessage: any) => {
@@ -28,7 +29,7 @@ const FriendsBar = ({ onSelectUser }: any) => {
             socket?.off("newMessage");
         };
 
-    }, [socket, messages])
+    }, [socket, messages]);
 
     const fetchSearchResult = async (debouncedQuery: string) => {
         try {
@@ -41,7 +42,7 @@ const FriendsBar = ({ onSelectUser }: any) => {
         } finally {
             setLoading(false);
         }
-    }
+    };
 
     const chatUserHandler = async () => {
         setLoading(true)
@@ -50,29 +51,29 @@ const FriendsBar = ({ onSelectUser }: any) => {
             // console.log(response.data)
             setChatUser(response.data.data)
 
-        } catch (error) {
-            console.log(error);
+        } catch (error: any) {
+            console.log(error.response.data.error.message);
+            toast.error(error.response.data.error.message)
         } finally {
             setLoading(false);
         }
-    }
+    };
 
     //show which user is selected
     const handleUserClick = (user: any) => {
         onSelectUser(user);
         setSelectedChat(user);
         setSetSelectedUserId(user._id);
-    }
+    };
 
-    //back from search result
-    // const handSearchback = () => {
-    //     setSearchedUser([]);
-
-    // }
+    // back from search result
+    const handSearchback = () => {
+        setSearchedUser([]);
+    };
 
     useEffect(() => {
         chatUserHandler()
-    }, [])
+    }, []);
 
     useEffect(() => {
         const handler = setTimeout(() => {
@@ -92,9 +93,9 @@ const FriendsBar = ({ onSelectUser }: any) => {
         }
     }, [debouncedQuery]);
 
-
     return (
-        <div>
+        <div className="w-full flex flex-col justify-start mt-4 h-full items-center">
+            {/* Search bar section */}
             <div className="flex justify-center items-center">
                 <label className="input">
                     <svg className="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -111,47 +112,54 @@ const FriendsBar = ({ onSelectUser }: any) => {
                     </svg>
                     <input type="search" onChange={(e) => setSearchInput(e.target.value)} required placeholder="Search" />
                 </label>
-                <div onClick={() => navigate(`/profile/${authUser?.data._id}`)} className="avatar avatar-placeholder">
-                    <div className="bg-neutral text-neutral-content w-10 rounded-full">
-                        <span className="text-xl">P</span>
+                <div onClick={() => navigate(`/profile`)} className="avatar">
+                    <div className="ring-primary ring-offset-base-100 w-10 rounded-full ring-2 ring-offset-2">
+                        <img src={authUser.data.profilePic ? authUser.data.profilePic : "../../public/user.png"} alt="Profile Picture" />
                     </div>
                 </div>
             </div>
-            <>
-                {loading ? <span className="loading loading-spinner text-primary"></span> :
-                    <>
-                        <div>
-                            <div className="dropdown dropdown-open">
-                                <ul tabIndex={0} className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
-                                    {searchedUser.length === 0 ? null : searchedUser.map((user: any) => (
-                                        <li key={user.mobileNumber} className="list-row">
-                                            <div>
-                                                <img className="size-10 rounded-box" src="https://img.daisyui.com/images/profile/demo/1@94.webp" />
+            {/* search section */}
+            <div>
+                <div className={`dropdown dropdown-${searchedUser.length === 0 ? "close" : "open"}`} >
+                    <ul tabIndex={0} className="dropdown-content menu bg-base-100 rounded-box z-10 w-52 p-2 shadow-sm">
+                        {
+                            searchedUser.map((user: any) => (
+                                <li key={user.mobileNumber} >
+                                    <a onClick={() => handleUserClick(user)} key={user._id}>{user.username}</a>
+                                </li>
+                            ))
+                        }
+                        <button onClick={handSearchback}>{"<-"}</button>
+                    </ul>
+                </div>
+            </div>
+
+            {/* All friends section */}
+            {
+                loading ? <span className="loading loading-spinner text-primary"></span> :
+                    <div className="w-full">
+                        <ul className="list bg-base-100 rounded-box shadow-md overflow-scroll">
+                            {
+                                chatUser.map((user: any, index: any) => (
+                                    <div
+                                        key={user._id}
+                                        className={`card card-border w-96 ${user._id == selectedUserId ? "bg-base-100" : "bg-base-300"} `}
+                                    >
+                                        <div onClick={() => handleUserClick(user)} className="card-body flex ">
+                                            <div className={`avatar avatar-${isOnline[index] ? 'online' : 'offline'}`}>
+                                                <div className="w-10 rounded-full">
+                                                    <img src={user.profilePic ? user.profilePic : "../../public/user.png"} />
+                                                </div>
                                             </div>
-                                            <div>
-                                                <div key={user._id}>{user.username}</div>
-                                            </div>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
-                        </div>
-                        <div>
-                            <ul className="list bg-base-100 rounded-box shadow-md overflow-scroll">
-                                {chatUser.map((user: any) => (
-                                    <li key={user._id} className="list-row" onClick={() => handleUserClick(user)}>
-                                        <div><img className="size-10 rounded-box" src="https://img.daisyui.com/images/profile/demo/1@94.webp" /></div>
-                                        <div>
-                                            <div key={user._id}>{user.username}</div>
+                                            <h2 className="card-title">{user.username}</h2>
                                         </div>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-                    </>
-                }
-            </>
-        </div>
+                                    </div>
+                                ))
+                            }
+                        </ul>
+                    </div>
+            }
+        </div >
     )
 }
 export default FriendsBar

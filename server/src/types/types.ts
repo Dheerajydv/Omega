@@ -7,6 +7,7 @@ export interface IUser extends Document {
     mobileNumber: number;
     password: string;
     friends?: mongoose.Types.ObjectId[];
+    profilePic?: string;
 }
 
 export interface IUserMethods {
@@ -17,7 +18,9 @@ export interface IUserMethods {
 export interface IMessage extends Document {
     senderId: mongoose.Types.ObjectId;
     recieverId: mongoose.Types.ObjectId;
-    message: string;
+    message?: string;
+    image?: string;
+    video?: string;
     chatId: mongoose.Types.ObjectId
 }
 

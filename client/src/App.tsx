@@ -3,6 +3,7 @@ import LoginForm from "./components/LoginForm"
 import RegisterForm from "./components/RegisterForm"
 import Home from "./components/Home"
 import { VerifyUser } from "./utils/VerifyUser"
+import Profile from "./components/Profile"
 
 
 const App = () => {
@@ -13,7 +14,8 @@ const App = () => {
           <Route path="/login" element={<LoginForm />} />
           <Route path="/register" element={<RegisterForm />} />
           <Route element={<VerifyUser />}>
-            <Route path="/" element={<Home />} />
+            <Route path="/chats" element={<Home />} />
+            <Route path="/profile" element={<Profile />} />
           </Route>
         </Routes>
       </div>
