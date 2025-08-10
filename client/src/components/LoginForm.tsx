@@ -35,7 +35,10 @@ const LoginForm = () => {
     const onSubmit = async (values: z.infer<typeof loginFormSchema>) => {
         setLoading(true);
         try {
-            const response = await axios.post("/api/auth/login", { ...values });
+            const response = await axios.post(
+                "https://omega-p95o.onrender.com/api/auth/login",
+                { ...values }
+            );
             // console.log(response);
             toast.success(response.data.message);
             localStorage.setItem("chatapp", JSON.stringify(response.data));

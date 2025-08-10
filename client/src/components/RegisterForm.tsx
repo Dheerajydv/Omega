@@ -36,9 +36,12 @@ const RegisterForm = () => {
     const onSubmit = async (values: z.infer<typeof registerFormSchema>) => {
         setLoading(true);
         try {
-            const response = await axios.post("/api/auth/register", {
-                ...values,
-            });
+            const response = await axios.post(
+                "https://omega-p95o.onrender.com/api/auth/register",
+                {
+                    ...values,
+                }
+            );
             // console.log(response);
             toast.success(response.data.message);
             localStorage.setItem("chatapp", JSON.stringify(response.data));

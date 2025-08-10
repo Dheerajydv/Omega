@@ -18,7 +18,7 @@ const Chats = () => {
         setLoading(true);
         try {
             const response = await axios.get(
-                `/api/messages/${selectedChat?._id}`
+                `https://omega-p95o.onrender.com/api/messages/${selectedChat?._id}`
             );
             // console.log(response.data.data)
             setMessages(response.data.data);
@@ -34,7 +34,7 @@ const Chats = () => {
         setLoading(true);
         try {
             const response = await axios.delete(
-                `/api/messages//delete/${msgId}`
+                `https://omega-p95o.onrender.com/api/messages/delete/${msgId}`
             );
             // console.log(response.data.data);
             toast.success(response.data.message);

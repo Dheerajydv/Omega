@@ -17,7 +17,7 @@ const SendMessage = () => {
         setSending(true);
         try {
             const response = await axios.post(
-                `/api/messages/send/${selectedChat?._id}`,
+                `https://omega-p95o.onrender.com/api/messages/send/${selectedChat?._id}`,
                 { message: sendMessageInput }
             );
             toast.success(response.data.message);
@@ -38,7 +38,7 @@ const SendMessage = () => {
         imageForm.append("image", image as File);
         try {
             const response = await axios.post(
-                `/api/messages/send-image/${selectedChat?._id}`,
+                `https://omega-p95o.onrender.com/api/messages/send-image/${selectedChat?._id}`,
                 imageForm,
                 {
                     withCredentials: true,

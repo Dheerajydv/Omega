@@ -31,7 +31,9 @@ const FriendsBar = ({ onSelectUser }: any) => {
         setLoading(true);
         console.log(newMessageUsers);
         try {
-            const response = await axios.get(`/api/users/current-chatter`);
+            const response = await axios.get(
+                `https://omega-p95o.onrender.com/api/users/current-chatter`
+            );
             setChatUser(response.data.data);
         } catch (error: any) {
             console.log(error.response.data.error.message);

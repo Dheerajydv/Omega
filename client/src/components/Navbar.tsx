@@ -7,7 +7,9 @@ const Navbar = () => {
     const navigate = useNavigate();
     const handleLogout = async () => {
         try {
-            const response = await axios.post("/api/auth/logout");
+            const response = await axios.post(
+                "https://omega-p95o.onrender.com/api/auth/logout"
+            );
             console.log(response.data.message);
             toast.success(response.data.message);
             navigate("/login");

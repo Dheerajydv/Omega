@@ -15,7 +15,7 @@ const Profile = () => {
     const deleteUser = async () => {
         try {
             const response = await axios.delete(
-                `/api/auth/delete/${authUser.data._id}`
+                `https://omega-p95o.onrender.com/api/auth/delete/${authUser.data._id}`
             );
             console.log(response);
             toast.success(response.data.message);
@@ -34,7 +34,7 @@ const Profile = () => {
         imageForm.append("profilePic", profilePic as File);
         try {
             const response = await axios.post(
-                `/api/auth//upload-profile/${authUser.data._id}`,
+                `https://omega-p95o.onrender.com/api/auth//upload-profile/${authUser.data._id}`,
                 imageForm,
                 {
                     withCredentials: true,
