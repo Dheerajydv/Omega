@@ -6,7 +6,7 @@ const app = express();
 const server = createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: "*",
+        origin: "https://omega-frontend-wy0f.onrender.com",
         methods: ["GET", "POST"],
     },
 });
