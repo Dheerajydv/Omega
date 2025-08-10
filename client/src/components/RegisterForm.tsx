@@ -6,6 +6,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { useAuth } from "../context/authContext";
+import Loader from "./Loader";
 
 const registerFormSchema = z.object({
     username: z.string(),
@@ -54,7 +55,7 @@ const RegisterForm = () => {
     return (
         <>
             {loading ? (
-                <span className="loading loading-spinner text-primary"></span>
+                <Loader />
             ) : (
                 <>
                     <h1 className="text-2xl mb-4">REGISTER TO OMEGA</h1>

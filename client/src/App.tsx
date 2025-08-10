@@ -1,14 +1,14 @@
 import { Route, Routes } from "react-router-dom";
 import LoginForm from "./components/LoginForm";
 import RegisterForm from "./components/RegisterForm";
-import Home from "./components/Home";
 import { VerifyUser } from "./utils/VerifyUser";
-import Profile from "./components/Profile";
+import Profile from "./pages/Profile";
+import Home from "./pages/Home";
 
 const App = () => {
     return (
         <>
-            <div className="p-2 w-screen h-screen flex flex-col items-center justify-center">
+            <div className="p-2 w-screen max-h-screen flex flex-col items-center justify-center">
                 <Routes>
                     <Route path="/login" element={<LoginForm />} />
                     <Route path="/register" element={<RegisterForm />} />

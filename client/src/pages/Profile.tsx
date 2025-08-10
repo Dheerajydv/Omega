@@ -3,6 +3,8 @@ import { useAuth } from "../context/authContext";
 import toast, { Toaster } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import React, { useState } from "react";
+import { ArrowLeft } from "lucide-react";
+import Loader from "../components/Loader";
 
 const Profile = () => {
     const { authUser } = useAuth();
@@ -107,11 +109,7 @@ const Profile = () => {
                                         onClick={uploadProfile}
                                         className="btn btn-primary"
                                     >
-                                        {uploading ? (
-                                            <span className="loading loading-spinner text-primary"></span>
-                                        ) : (
-                                            "Update"
-                                        )}
+                                        {uploading ? <Loader /> : "Update"}
                                     </button>
                                 </div>
                             </dialog>
@@ -154,11 +152,7 @@ const Profile = () => {
                                         onClick={uploadProfile}
                                         className="btn btn-primary"
                                     >
-                                        {uploading ? (
-                                            <span className="loading loading-spinner text-primary"></span>
-                                        ) : (
-                                            "Add Profile"
-                                        )}
+                                        {uploading ? <Loader /> : "Add Profile"}
                                     </button>
                                 </div>
                             </dialog>
@@ -171,7 +165,13 @@ const Profile = () => {
                 ).toLocaleDateString("en-IN")}`}</p>
                 <p>{`Email: ${authUser.data.email}`}</p>
                 <p>{`Mobile Number: ${authUser.data.mobileNumber}`}</p>
-                <div className="card-actions justify-end">
+                <div className="card-actions justify-between items-center">
+                    <button
+                        className="btn btn-ghost"
+                        onClick={() => navigate("/chats")}
+                    >
+                        <ArrowLeft />
+                    </button>
                     <button onClick={deleteUser} className="btn btn-error">
                         Delete My Account
                     </button>

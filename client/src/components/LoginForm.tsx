@@ -6,6 +6,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { useAuth } from "../context/authContext";
+import Loader from "./Loader";
 
 const loginFormSchema = z.object({
     mobileNumber: z.string().min(10, "Invlaid Mobile Number"),
@@ -51,7 +52,7 @@ const LoginForm = () => {
     return (
         <>
             {loading ? (
-                <span className="loading loading-spinner text-primary"></span>
+                <Loader />
             ) : (
                 <>
                     <h1 className="text-2xl mb-4">LOGIN TO OMEGA</h1>

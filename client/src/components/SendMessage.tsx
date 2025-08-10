@@ -2,6 +2,8 @@ import axios from "axios";
 import React, { useState } from "react";
 import userChats from "../zustands/useChats";
 import toast, { Toaster } from "react-hot-toast";
+import { CircleArrowRight, Image } from "lucide-react";
+import Loader from "./Loader";
 
 const SendMessage = () => {
     const [sendMessageInput, setSendMessageInput] = useState("");
@@ -69,46 +71,50 @@ const SendMessage = () => {
 
     return (
         <form
-            className="border boreder-secondary flex justify-center items-center"
+            className="h-1/12 w-full px-2 flex justify-center items-center"
             onSubmit={handleSendMessage}
         >
-            <div role="button" onClick={toggleFileInputBox} className="btn m-1">
-                🏞️
+            <div
+                role="button"
+                onClick={toggleFileInputBox}
+                className="btn m-1 w-1/12"
+            >
+                <Image />
             </div>
             {sendFileBox ? (
-                <div className="w-fit">
+                <div className="w-11/12">
                     <div
                         tabIndex={0}
-                        className="flex justify-center items-center w-full card card-sm bg-base-100 z-1 shadow-md"
+                        className="flex justify-center items-center w-full bg-base-100 z-1 shadow-md"
                     >
                         <input
                             id="image"
                             type="file"
-                            className="file-input file-input-primary"
+                            className="file-input w-10/12 file-input-primary"
                             onChange={handleFileChange}
                         />
                         <button
                             onClick={handleSendImage}
-                            className="btn btn-primary mx-1"
+                            className="btn btn-primary mx-1 w-2/12"
                         >
-                            {sending ? "Sending..." : "Send Image"}
+                            {sending ? <Loader /> : <CircleArrowRight />}
                         </button>
                     </div>
                 </div>
             ) : (
-                <div className="flex justify-center items-center">
+                <div className="flex gap-1 w-11/12 justify-center items-center">
                     <input
                         value={sendMessageInput}
                         onChange={(e) => setSendMessageInput(e.target.value)}
                         type="text"
                         placeholder="Type here"
-                        className="input "
+                        className="input input-primary w-10/12"
                     />
                     <button
                         onClick={handleSendMessage}
-                        className="btn btn-primary"
+                        className="btn btn-primary w-2/12"
                     >
-                        {sending ? "Sending" : "Send"}
+                        {sending ? <Loader /> : <CircleArrowRight />}
                     </button>
                 </div>
             )}
