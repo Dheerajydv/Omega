@@ -3,6 +3,7 @@ import {
     sendMessage,
     getMessages,
     sendImage,
+    deleteMessage,
 } from "../controllers/message.controller";
 import { verifyUserAutherization } from "../middlewares/auth.middleware";
 import { upload } from "../middlewares/multer.middleware";
@@ -17,5 +18,6 @@ router.post(
     sendImage
 );
 router.get("/:id", verifyUserAutherization, getMessages);
+router.delete("/delete/:id", verifyUserAutherization, deleteMessage);
 
 export default router;

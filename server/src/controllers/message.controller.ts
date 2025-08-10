@@ -117,3 +117,22 @@ export const getMessages = async (req: AuthRequest, res: Response) => {
         res.status(error?.statusCode || 500).json({ error: error });
     }
 };
+
+export const deleteMessage = async (req: Request, res: Response) => {
+    try {
+        const { id: messageId } = req.params;
+        if (!messageId) {
+            throw new ApiError(400, "Message Id required.");
+        }
+
+        const message = await Message.findByIdAndDelete(messageId);
+        if (!message) {
+            throw new ApiError(500, "Message Not Found.");
+        }
+
+        res.status(200).json(new ApiResponse(200, message, "Message Deleted."));
+    } catch (error: any) {
+        console.error(error);
+        res.status(error?.statusCode || 500).json({ error: error });
+    }
+};

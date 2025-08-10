@@ -17,7 +17,7 @@ const Navbar = () => {
         }
     };
     return (
-        <div className="navbar bg-primar h-1/12 flex justify-between text-primary-content">
+        <div className="navbar h-1/12 flex justify-between text-primary">
             <button className="btn btn-ghost text-xl">OMEGA</button>
             <ThemeController />
             <button onClick={handleLogout} className="btn btn-error">
