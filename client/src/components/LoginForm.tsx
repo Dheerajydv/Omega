@@ -40,7 +40,7 @@ const LoginForm = () => {
             toast.success(response.data.message);
             localStorage.setItem("chatapp", JSON.stringify(response.data));
             setAuthUser(response.data);
-            navigate("/chats");
+            navigate("/");
         } catch (error: any) {
             console.log(error);
             toast.error(error.response.data.error.message);
