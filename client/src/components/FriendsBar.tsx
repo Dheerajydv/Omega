@@ -86,7 +86,7 @@ const FriendsBar = ({ onSelectUser }: any) => {
                                             src={
                                                 user.profilePic
                                                     ? user.profilePic
-                                                    : "../../public/user.png"
+                                                    : "/user.png"
                                             }
                                         />
                                     </div>

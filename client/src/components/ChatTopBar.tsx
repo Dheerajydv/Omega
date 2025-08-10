@@ -23,7 +23,7 @@ const ChatTopBar = ({ handleChatBack }: ChatTopBarProps) => {
                         src={
                             selectedChat.profilePic
                                 ? selectedChat.profilePic
-                                : "../../public/user.png"
+                                : "/user.png"
                         }
                         alt="Profile Picture"
                     />

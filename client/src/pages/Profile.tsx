@@ -65,7 +65,7 @@ const Profile = () => {
                             src={
                                 authUser.data.profilePic
                                     ? authUser.data.profilePic
-                                    : "../../public/user.png"
+                                    : "/user.png"
                             }
                         />
                     </div>
@@ -168,7 +168,7 @@ const Profile = () => {
                 <div className="card-actions justify-between items-center">
                     <button
                         className="btn btn-ghost"
-                        onClick={() => navigate("/chats")}
+                        onClick={() => navigate("/")}
                     >
                         <ArrowLeft />
                     </button>
