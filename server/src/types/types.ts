@@ -21,11 +21,11 @@ export interface IMessage extends Document {
     message?: string;
     image?: string;
     video?: string;
-    chatId: mongoose.Types.ObjectId
+    chatId: mongoose.Types.ObjectId;
 }
 
 export interface AuthRequest extends Request {
-    user?: IUser
+    user?: IUser;
 }
 
 export interface IChat extends Document {

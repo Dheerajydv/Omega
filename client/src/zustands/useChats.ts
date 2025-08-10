@@ -21,10 +21,10 @@ const userChats = create<ChatState>((set) => ({
     setMessages: (messages) => set({ messages: messages }),
 
     // Action to add a single new message to the existing array
-    addMessage: (newMessage) => set((state) => ({
-        messages: [...state.messages, newMessage]
-    })),
+    addMessage: (newMessage) =>
+        set((state) => ({
+            messages: [...state.messages, newMessage],
+        })),
 }));
-
 
 export default userChats;

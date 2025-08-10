@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useState } from "react"
+import React, { useState } from "react";
 import userChats from "../zustands/useChats";
 import toast, { Toaster } from "react-hot-toast";
 
@@ -14,40 +14,47 @@ const SendMessage = () => {
         e.preventDefault();
         setSending(true);
         try {
-            const response = await axios.post(`/api/messages/send/${selectedChat?._id}`, { message: sendMessageInput })
-            toast.success(response.data.message)
-            setMessages([...messages, response.data.data])
+            const response = await axios.post(
+                `/api/messages/send/${selectedChat?._id}`,
+                { message: sendMessageInput }
+            );
+            toast.success(response.data.message);
+            setMessages([...messages, response.data.data]);
         } catch (error: any) {
-            console.log(error)
+            console.log(error);
             toast.error(error.response.data.error.message);
         } finally {
             setSending(false);
             setSendMessageInput("");
         }
-    }
+    };
 
     const handleSendImage = async (e: React.FormEvent) => {
         e.preventDefault();
         setSending(true);
         const imageForm = new FormData();
-        imageForm.append("image", image)
+        imageForm.append("image", image);
         try {
-            const response = await axios.post(`/api/messages/send-image/${selectedChat?._id}`, imageForm, {
-                withCredentials: true,
-                headers: {
-                    "Content-Type": ""
+            const response = await axios.post(
+                `/api/messages/send-image/${selectedChat?._id}`,
+                imageForm,
+                {
+                    withCredentials: true,
+                    headers: {
+                        "Content-Type": "",
+                    },
                 }
-            })
-            toast.success(response.data.message)
-            setMessages([...messages, response.data.data])
+            );
+            toast.success(response.data.message);
+            setMessages([...messages, response.data.data]);
         } catch (error: any) {
-            console.log(error)
+            console.log(error);
             toast.error(error.response.data.error.message);
         } finally {
             setSending(false);
             setSendMessageInput("");
         }
-    }
+    };
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const files = e.target.files;
@@ -57,33 +64,56 @@ const SendMessage = () => {
     };
 
     const toggleFileInputBox = () => {
-        setSetFileBox(prev => !prev)
-    }
+        setSetFileBox((prev) => !prev);
+    };
 
     return (
-        <form className="border boreder-secondary flex justify-center items-center" onSubmit={handleSendMessage}>
-
-            <div role="button" onClick={toggleFileInputBox} className="btn m-1">🏞️</div>
-            {sendFileBox ? <div className="w-fit">
-                <div
-                    tabIndex={0}
-                    className="flex justify-center items-center w-full card card-sm bg-base-100 z-1 shadow-md">
-                    <input
-                        id="image"
-                        type="file"
-                        className="file-input file-input-primary"
-                        onChange={handleFileChange}
-                    />
-                    <button onClick={handleSendImage} className="btn btn-primary mx-1">{sending ? "Sending..." : "Send Image"}</button>
+        <form
+            className="border boreder-secondary flex justify-center items-center"
+            onSubmit={handleSendMessage}
+        >
+            <div role="button" onClick={toggleFileInputBox} className="btn m-1">
+                🏞️
+            </div>
+            {sendFileBox ? (
+                <div className="w-fit">
+                    <div
+                        tabIndex={0}
+                        className="flex justify-center items-center w-full card card-sm bg-base-100 z-1 shadow-md"
+                    >
+                        <input
+                            id="image"
+                            type="file"
+                            className="file-input file-input-primary"
+                            onChange={handleFileChange}
+                        />
+                        <button
+                            onClick={handleSendImage}
+                            className="btn btn-primary mx-1"
+                        >
+                            {sending ? "Sending..." : "Send Image"}
+                        </button>
+                    </div>
                 </div>
-            </div> :
+            ) : (
                 <div className="flex justify-center items-center">
-                    <input value={sendMessageInput} onChange={(e) => setSendMessageInput(e.target.value)} type="text" placeholder="Type here" className="input " />
-                    <button onClick={handleSendMessage} className="btn btn-primary">{sending ? "Sending" : "Send"}</button>
+                    <input
+                        value={sendMessageInput}
+                        onChange={(e) => setSendMessageInput(e.target.value)}
+                        type="text"
+                        placeholder="Type here"
+                        className="input "
+                    />
+                    <button
+                        onClick={handleSendMessage}
+                        className="btn btn-primary"
+                    >
+                        {sending ? "Sending" : "Send"}
+                    </button>
                 </div>
-            }
+            )}
             <Toaster position="bottom-right" />
         </form>
-    )
-}
-export default SendMessage
+    );
+};
+export default SendMessage;

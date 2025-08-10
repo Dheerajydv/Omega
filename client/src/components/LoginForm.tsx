@@ -10,23 +10,26 @@ import { useAuth } from "../context/authContext";
 const loginFormSchema = z.object({
     mobileNumber: z.string().min(10, "Invlaid Mobile Number"),
     email: z.email("Invalid Email"),
-    password: z.string()
-})
+    password: z.string(),
+});
 
 const LoginForm = () => {
-
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const { setAuthUser } = useAuth();
 
-    const { register, handleSubmit, formState: { errors } } = useForm<z.infer<typeof loginFormSchema>>({
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm<z.infer<typeof loginFormSchema>>({
         resolver: zodResolver(loginFormSchema),
         defaultValues: {
             mobileNumber: "",
             email: "",
-            password: ""
-        }
-    })
+            password: "",
+        },
+    });
 
     const onSubmit = async (values: z.infer<typeof loginFormSchema>) => {
         setLoading(true);
@@ -35,32 +38,42 @@ const LoginForm = () => {
             // console.log(response);
             toast.success(response.data.message);
             localStorage.setItem("chatapp", JSON.stringify(response.data));
-            setAuthUser(response.data)
+            setAuthUser(response.data);
             navigate("/chats");
         } catch (error: any) {
-            console.log(error)
+            console.log(error);
             toast.error(error.response.data.error.message);
         } finally {
             setLoading(false);
         }
-    }
+    };
 
     return (
         <>
-            {loading ? <span className="loading loading-spinner text-primary"></span>
-                :
+            {loading ? (
+                <span className="loading loading-spinner text-primary"></span>
+            ) : (
                 <>
                     <h1 className="text-2xl mb-4">LOGIN TO OMEGA</h1>
-                    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 mb-4 flex flex-col justify-center items-center">
+                    <form
+                        onSubmit={handleSubmit(onSubmit)}
+                        className="space-y-4 mb-4 flex flex-col justify-center items-center"
+                    >
                         <fieldset className="fieldset">
-                            <legend className="fieldset-legend">Phone Number</legend>
+                            <legend className="fieldset-legend">
+                                Phone Number
+                            </legend>
                             <input
                                 type="text"
                                 placeholder="Phone Number"
                                 className="input input-neutral"
                                 {...register("mobileNumber")}
                             />
-                            {errors?.mobileNumber && <p className="text-error">{errors.mobileNumber.message}</p>}
+                            {errors?.mobileNumber && (
+                                <p className="text-error">
+                                    {errors.mobileNumber.message}
+                                </p>
+                            )}
                         </fieldset>
 
                         <fieldset className="fieldset">
@@ -71,29 +84,45 @@ const LoginForm = () => {
                                 className="input input-neutral"
                                 {...register("email")}
                             />
-                            {errors?.email && <p className="text-error">{errors.email.message}</p>}
+                            {errors?.email && (
+                                <p className="text-error">
+                                    {errors.email.message}
+                                </p>
+                            )}
                         </fieldset>
 
                         <fieldset className="fieldset">
-                            <legend className="fieldset-legend">Password</legend>
+                            <legend className="fieldset-legend">
+                                Password
+                            </legend>
                             <input
                                 type="password"
                                 placeholder="Password"
                                 className="input input-neutral"
                                 {...register("password")}
                             />
-                            {errors?.password && <p className="text-error">{errors.password.message}</p>}
+                            {errors?.password && (
+                                <p className="text-error">
+                                    {errors.password.message}
+                                </p>
+                            )}
                         </fieldset>
-                        <button className="btn btn-primary" type="submit">Login</button>
+                        <button className="btn btn-primary" type="submit">
+                            Login
+                        </button>
                     </form>
-                    <p>Don't Have an Account ? {" "}
+                    <p>
+                        Don't Have an Account ?{" "}
                         <a href="/register">
-                            <button className="text-primary">Register Here</button>
+                            <button className="text-primary">
+                                Register Here
+                            </button>
                         </a>
                     </p>
                     <Toaster position="bottom-right" />
-                </>}
+                </>
+            )}
         </>
-    )
-}
-export default LoginForm
+    );
+};
+export default LoginForm;

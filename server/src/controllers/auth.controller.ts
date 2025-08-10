@@ -1,9 +1,8 @@
-import { Request, Response } from "express"
+import { Request, Response } from "express";
 import { ApiError } from "../utils/ApiError";
 import User from "../models/userModel";
 import { ApiResponse } from "../utils/ApiResponse";
 import { uploadOnCloudinary } from "../utils/cloudinary";
-
 
 const generateAccessToken = async (userId: any): Promise<any> => {
     try {
@@ -23,7 +22,7 @@ export const registerUser = async (req: Request, res: Response) => {
     try {
         const { username, email, mobileNumber, password } = req.body;
         if (!username || !email || !mobileNumber || !password) {
-            throw new ApiError(400, "All fields are required.")
+            throw new ApiError(400, "All fields are required.");
         }
 
         const userAlreadyExists = await User.find({ email, mobileNumber });
@@ -32,19 +31,23 @@ export const registerUser = async (req: Request, res: Response) => {
         }
 
         const registeredUser = await User.create({
-            username, email, mobileNumber, password
-        })
+            username,
+            email,
+            mobileNumber,
+            password,
+        });
         if (!registeredUser) {
-            throw new ApiError(404, "Error Occured while registering user.")
+            throw new ApiError(404, "Error Occured while registering user.");
         }
 
-        res.status(201).json(new ApiResponse(200, {}, "User Registered Sucessfully."))
-
+        res.status(201).json(
+            new ApiResponse(200, {}, "User Registered Sucessfully.")
+        );
     } catch (error: any) {
         console.error(error);
-        res.status(error?.statusCode || 500).json({ "error": error });
+        res.status(error?.statusCode || 500).json({ error: error });
     }
-}
+};
 
 export const loginUser = async (req: Request, res: Response) => {
     try {
@@ -55,7 +58,7 @@ export const loginUser = async (req: Request, res: Response) => {
 
         const user = await User.findOne({ email, mobileNumber });
         if (!user) {
-            throw new ApiError(404, "User Not Found.")
+            throw new ApiError(404, "User Not Found.");
         }
 
         const isPasswordCorrect = user.isPasswordCorrect(password);
@@ -65,7 +68,9 @@ export const loginUser = async (req: Request, res: Response) => {
 
         const accessToken = await generateAccessToken(user._id);
 
-        const loggedInUser = await User.findOne({ email, mobileNumber }).select("-password");
+        const loggedInUser = await User.findOne({ email, mobileNumber }).select(
+            "-password"
+        );
         if (!loggedInUser) {
             throw new ApiError(404, "User Not Found");
         }
@@ -77,32 +82,26 @@ export const loginUser = async (req: Request, res: Response) => {
         res.status(200)
             .cookie("accessToken", accessToken, options)
             .json(
-                new ApiResponse(
-                    200,
-                    loggedInUser,
-                    "User LoggedIn Sucessfull."
-                )
+                new ApiResponse(200, loggedInUser, "User LoggedIn Sucessfull.")
             );
-
     } catch (error: any) {
         console.error(error);
-        res.status(error?.statusCode || 500).json({ "error": error });
+        res.status(error?.statusCode || 500).json({ error: error });
     }
-}
+};
 
 export const logoutUser = async (req: Request, res: Response) => {
     try {
         res.cookie("accessToken", "", {
-            maxAge: 0
-        })
+            maxAge: 0,
+        });
 
-        res.status(200).json(new ApiResponse(200, {}, "Logout Sucessfull."))
-
+        res.status(200).json(new ApiResponse(200, {}, "Logout Sucessfull."));
     } catch (error: any) {
         console.error(error);
-        res.status(error?.statusCode || 500).json({ "error": error });
+        res.status(error?.statusCode || 500).json({ error: error });
     }
-}
+};
 
 export const deleteUser = async (req: Request, res: Response) => {
     try {
@@ -116,13 +115,18 @@ export const deleteUser = async (req: Request, res: Response) => {
             throw new ApiError(404, "User Not Found");
         }
 
-        res.status(200).json(new ApiResponse(200, deletedUserInfo, "Account Deleted sucessfully."))
-
+        res.status(200).json(
+            new ApiResponse(
+                200,
+                deletedUserInfo,
+                "Account Deleted sucessfully."
+            )
+        );
     } catch (error: any) {
         console.error(error);
-        res.status(error?.statusCode || 500).json({ "error": error });
+        res.status(error?.statusCode || 500).json({ error: error });
     }
-}
+};
 
 export const uploadProfile = async (req: Request, res: Response) => {
     try {
@@ -133,25 +137,32 @@ export const uploadProfile = async (req: Request, res: Response) => {
 
         const profilePic = req.file?.path;
         if (!profilePic) {
-            throw new ApiError(400, "Image is required.")
+            throw new ApiError(400, "Image is required.");
         }
 
         const uploadedProfilePicture = await uploadOnCloudinary(profilePic);
         if (!uploadedProfilePicture) {
-            throw new ApiError(500, "Error Occured while uploading profile picture.")
+            throw new ApiError(
+                500,
+                "Error Occured while uploading profile picture."
+            );
         }
 
         const user = await User.findByIdAndUpdate(currentUserId, {
-            profilePic: uploadedProfilePicture
+            profilePic: uploadedProfilePicture.secure_url,
         }).select("-password");
         if (!user) {
-            throw new ApiError(500, "Error Occured while updating profile picture.")
+            throw new ApiError(
+                500,
+                "Error Occured while updating profile picture."
+            );
         }
 
-        res.status(200).json(new ApiResponse(200, user, "Profile Picture Uploaded sucessfully."));
-
+        res.status(200).json(
+            new ApiResponse(200, user, "Profile Picture Uploaded sucessfully.")
+        );
     } catch (error: any) {
         console.error(error);
-        res.status(error?.statusCode || 500).json({ "error": error });
+        res.status(error?.statusCode || 500).json({ error: error });
     }
-}
+};

@@ -7,9 +7,9 @@ const server = createServer(app);
 const io = new Server(server, {
     cors: {
         origin: "*",
-        methods: ["GET", "POST"]
-    }
-})
+        methods: ["GET", "POST"],
+    },
+});
 
 const userSocketmap: Record<string, string> = {}; //{userId,socketId}
 
@@ -17,8 +17,7 @@ export const getReceiverSocketId = (receiverId: string) => {
     return userSocketmap[receiverId];
 };
 
-
-io.on('connection', (socket) => {
+io.on("connection", (socket) => {
     const queryUserId = socket.handshake.query.userId;
 
     // 2. Ensure userId is a single string.
@@ -28,14 +27,14 @@ io.on('connection', (socket) => {
         userSocketmap[userId] = socket.id;
     }
 
-    io.emit("getOnlineUsers", Object.keys(userSocketmap))
+    io.emit("getOnlineUsers", Object.keys(userSocketmap));
 
-    socket.on('disconnect', () => {
+    socket.on("disconnect", () => {
         if (userId) {
             delete userSocketmap[userId];
-            io.emit('getOnlineUsers', Object.keys(userSocketmap));
+            io.emit("getOnlineUsers", Object.keys(userSocketmap));
         }
     });
 });
 
-export { app, server, io }
+export { app, server, io };

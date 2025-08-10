@@ -1,11 +1,11 @@
-import express from 'express'
-import { verifyUserAutherization } from '../middlewares/auth.middleware';
-import { searchUser, getCurrentChatters } from '../controllers/user.controller';
+import express from "express";
+import { verifyUserAutherization } from "../middlewares/auth.middleware";
+import { searchUser, getCurrentChatters } from "../controllers/user.controller";
 
-const router = express.Router()
+const router = express.Router();
 
-router.get('/search', verifyUserAutherization, searchUser);
+router.get("/search", verifyUserAutherization, searchUser);
 
-router.get('/current-chatter', verifyUserAutherization, getCurrentChatters)
+router.get("/current-chatter", verifyUserAutherization, getCurrentChatters);
 
-export default router
+export default router;

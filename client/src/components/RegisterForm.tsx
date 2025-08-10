@@ -11,66 +11,88 @@ const registerFormSchema = z.object({
     username: z.string(),
     mobileNumber: z.string().min(10, "Invlaid Mobile Number"),
     email: z.email("Invalid Email"),
-    password: z.string()
-})
+    password: z.string(),
+});
 
 const RegisterForm = () => {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const { setAuthUser } = useAuth();
 
-    const { register, handleSubmit, formState: { errors } } = useForm<z.infer<typeof registerFormSchema>>({
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm<z.infer<typeof registerFormSchema>>({
         resolver: zodResolver(registerFormSchema),
         defaultValues: {
             mobileNumber: "",
             email: "",
-            password: ""
-        }
-    })
+            password: "",
+        },
+    });
 
     const onSubmit = async (values: z.infer<typeof registerFormSchema>) => {
         setLoading(true);
         try {
-            const response = await axios.post("/api/auth/register", { ...values });
+            const response = await axios.post("/api/auth/register", {
+                ...values,
+            });
             // console.log(response);
             toast.success(response.data.message);
             localStorage.setItem("chatapp", JSON.stringify(response.data));
-            setAuthUser(response.data)
+            setAuthUser(response.data);
             navigate("/login");
         } catch (error: any) {
-            console.log(error)
+            console.log(error);
             toast.error(error.response.data.error.message);
         } finally {
             setLoading(false);
         }
-    }
+    };
 
     return (
         <>
-            {loading ? <span className="loading loading-spinner text-primary"></span>
-                :
+            {loading ? (
+                <span className="loading loading-spinner text-primary"></span>
+            ) : (
                 <>
                     <h1 className="text-2xl mb-4">REGISTER TO OMEGA</h1>
-                    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 mb-4 flex flex-col justify-center items-center">
+                    <form
+                        onSubmit={handleSubmit(onSubmit)}
+                        className="space-y-4 mb-4 flex flex-col justify-center items-center"
+                    >
                         <fieldset className="fieldset">
-                            <legend className="fieldset-legend">Username</legend>
+                            <legend className="fieldset-legend">
+                                Username
+                            </legend>
                             <input
                                 type="text"
                                 placeholder="Username"
                                 className="input input-neutral"
                                 {...register("username")}
                             />
-                            {errors?.username && <p className="text-error">{errors.username.message}</p>}
+                            {errors?.username && (
+                                <p className="text-error">
+                                    {errors.username.message}
+                                </p>
+                            )}
                         </fieldset>
                         <fieldset className="fieldset">
-                            <legend className="fieldset-legend">Phone Number</legend>
+                            <legend className="fieldset-legend">
+                                Phone Number
+                            </legend>
                             <input
                                 type="text"
                                 placeholder="Phone Number"
                                 className="input input-neutral"
                                 {...register("mobileNumber")}
                             />
-                            {errors?.mobileNumber && <p className="text-error">{errors.mobileNumber.message}</p>}
+                            {errors?.mobileNumber && (
+                                <p className="text-error">
+                                    {errors.mobileNumber.message}
+                                </p>
+                            )}
                         </fieldset>
 
                         <fieldset className="fieldset">
@@ -81,29 +103,43 @@ const RegisterForm = () => {
                                 className="input input-neutral"
                                 {...register("email")}
                             />
-                            {errors?.email && <p className="text-error">{errors.email.message}</p>}
+                            {errors?.email && (
+                                <p className="text-error">
+                                    {errors.email.message}
+                                </p>
+                            )}
                         </fieldset>
 
                         <fieldset className="fieldset">
-                            <legend className="fieldset-legend">Password</legend>
+                            <legend className="fieldset-legend">
+                                Password
+                            </legend>
                             <input
                                 type="password"
                                 placeholder="Password"
                                 className="input input-neutral"
                                 {...register("password")}
                             />
-                            {errors?.password && <p className="text-error">{errors.password.message}</p>}
+                            {errors?.password && (
+                                <p className="text-error">
+                                    {errors.password.message}
+                                </p>
+                            )}
                         </fieldset>
-                        <button className="btn btn-primary" type="submit">Register</button>
+                        <button className="btn btn-primary" type="submit">
+                            Register
+                        </button>
                     </form>
-                    <p>Don't Have an Account ? {" "}
+                    <p>
+                        Don't Have an Account ?{" "}
                         <a href="/login">
                             <button className="text-primary">Login Here</button>
                         </a>
                     </p>
                     <Toaster position="bottom-right" />
-                </>}
+                </>
+            )}
         </>
-    )
-}
-export default RegisterForm
+    );
+};
+export default RegisterForm;

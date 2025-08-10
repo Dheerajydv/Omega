@@ -23,12 +23,12 @@ export const verifyUserAutherization = async (
         }
         const user = await User.findById(decodedToken._id).select("-password");
         if (!user) {
-            throw new ApiError(401, "Invalid access token")
+            throw new ApiError(401, "Invalid access token");
         }
-        req.user = user
-        next()
+        req.user = user;
+        next();
     } catch (err: any) {
         console.error("Error in verify user middleware: ", err);
-        res.status(err?.statusCode || 500).json({ "error": err });
+        res.status(err?.statusCode || 500).json({ error: err });
     }
 };
