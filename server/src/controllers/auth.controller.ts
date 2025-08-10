@@ -3,6 +3,7 @@ import { ApiError } from "../utils/ApiError";
 import User from "../models/userModel";
 import { ApiResponse } from "../utils/ApiResponse";
 import { uploadOnCloudinary } from "../utils/cloudinary";
+import type { CookieOptions } from "express";
 
 const generateAccessToken = async (userId: any): Promise<any> => {
     try {
@@ -75,10 +76,12 @@ export const loginUser = async (req: Request, res: Response) => {
             throw new ApiError(404, "User Not Found");
         }
 
-        const options = {
+        const options: CookieOptions = {
             httpOnly: false,
             secure: false,
+            sameSite: "none",
         };
+
         res.status(200)
             .cookie("accessToken", accessToken, options)
             .json(
