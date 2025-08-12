@@ -37,7 +37,10 @@ const Chats = () => {
         setLoading(true);
         try {
             const response = await axios.delete(
-                `https://omega-p95o.onrender.com/api/messages/delete/${msgId}`
+                `https://omega-p95o.onrender.com/api/messages/delete/${msgId}`,
+                {
+                    withCredentials: true,
+                }
             );
             // console.log(response.data.data);
             toast.success(response.data.message);
