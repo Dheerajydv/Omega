@@ -80,6 +80,8 @@ export const loginUser = async (req: Request, res: Response) => {
             httpOnly: false,
             secure: false,
             sameSite: "none",
+            maxAge: 24 * 60 * 60 * 1000,
+            path: "/",
         };
 
         res.status(200)

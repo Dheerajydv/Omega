@@ -4,12 +4,12 @@ import { dbConnect } from "./db/dbConnect";
 import authRouter from "./routes/auth.route";
 import messageRouter from "./routes/message.route";
 import userRouter from "./routes/user.route";
-import cookirParser from "cookie-parser";
+import cookieParser from "cookie-parser";
 import { app, server } from "./socketio/socket";
 import cors, { CorsOptions } from "cors";
 
 dotenv.config({ quiet: true });
-app.use(cookirParser());
+app.use(cookieParser());
 app.use(express.json({ limit: "10mb" }));
 app.use(
     express.urlencoded({
