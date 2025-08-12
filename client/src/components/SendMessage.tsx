@@ -18,7 +18,10 @@ const SendMessage = () => {
         try {
             const response = await axios.post(
                 `https://omega-p95o.onrender.com/api/messages/send/${selectedChat?._id}`,
-                { message: sendMessageInput }
+                { message: sendMessageInput },
+                {
+                    withCredentials: true,
+                }
             );
             toast.success(response.data.message);
             setMessages([...messages, response.data.data]);
@@ -42,9 +45,6 @@ const SendMessage = () => {
                 imageForm,
                 {
                     withCredentials: true,
-                    headers: {
-                        "Content-Type": "",
-                    },
                 }
             );
             toast.success(response.data.message);

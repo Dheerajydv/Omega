@@ -18,7 +18,10 @@ const Chats = () => {
         setLoading(true);
         try {
             const response = await axios.get(
-                `https://omega-p95o.onrender.com/api/messages/${selectedChat?._id}`
+                `https://omega-p95o.onrender.com/api/messages/${selectedChat?._id}`,
+                {
+                    withCredentials: true,
+                }
             );
             // console.log(response.data.data)
             setMessages(response.data.data);

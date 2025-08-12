@@ -40,6 +40,9 @@ const RegisterForm = () => {
                 "https://omega-p95o.onrender.com/api/auth/register",
                 {
                     ...values,
+                },
+                {
+                    withCredentials: true,
                 }
             );
             // console.log(response);

@@ -16,7 +16,7 @@ export const verifyUserAutherization = async (
             req.header("Authorization")?.replace("Bearer ", "");
 
         console.log("Token is: ", token);
-        console.log("Req.cookies is: ", req.cookies?.accessToken);
+        console.log("Req.cookies is: ", req.cookies);
         if (!token) {
             throw new ApiError(401, "Unauthorised request ");
         }

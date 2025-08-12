@@ -15,7 +15,10 @@ const Profile = () => {
     const deleteUser = async () => {
         try {
             const response = await axios.delete(
-                `https://omega-p95o.onrender.com/api/auth/delete/${authUser.data._id}`
+                `https://omega-p95o.onrender.com/api/auth/delete/${authUser.data._id}`,
+                {
+                    withCredentials: true,
+                }
             );
             console.log(response);
             toast.success(response.data.message);
