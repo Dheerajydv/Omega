@@ -91,7 +91,7 @@ const SearchBar = ({ handleUserClick }: SearchBarProps) => {
                             src={
                                 authUser.data.profilePic
                                     ? authUser.data.profilePic
-                                    : "../../public/user.png"
+                                    : "/user.png"
                             }
                             alt="Profile Picture"
                         />

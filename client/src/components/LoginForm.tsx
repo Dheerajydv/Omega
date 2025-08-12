@@ -38,7 +38,12 @@ const LoginForm = () => {
             const response = await axios.post(
                 "https://omega-p95o.onrender.com/api/auth/login",
                 { ...values },
-                { withCredentials: true }
+                {
+                    withCredentials: true,
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                }
             );
             // console.log(response);
             toast.success(response.data.message);
